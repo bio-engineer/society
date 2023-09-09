@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  postgresql_main:
+    image: postgres:latest
+    ports:
+      - "5440:5432"
+    networks:
+      - society-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db_main
+
+  society:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      -
+      -
+      -
+      -
+    networks:
+      - society-network
+    depends_on:
+      - postgresql_main
+
+networks:
+  society-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.200.204.0/24"
