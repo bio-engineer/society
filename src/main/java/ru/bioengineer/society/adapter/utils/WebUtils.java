@@ -14,6 +14,11 @@ public final class WebUtils {
         return ResponseEntity.status(HttpStatusCode.valueOf(responseCode)).body(errorResponse);
     }
 
+    public static <T extends Exception> ResponseEntity<ErrorResponse> createErrorResponse(T throwable, int responseCode) {
+        ErrorResponse errorResponse = new ErrorResponse(throwable.getMessage(), UUID.randomUUID().toString(), responseCode);
+        return ResponseEntity.status(HttpStatusCode.valueOf(responseCode)).body(errorResponse);
+    }
+
     private WebUtils() {
 
     }
