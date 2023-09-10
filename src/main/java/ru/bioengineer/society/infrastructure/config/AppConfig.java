@@ -2,7 +2,6 @@ package ru.bioengineer.society.infrastructure.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,7 +24,7 @@ public class AppConfig {
     private static String getRequiredEnv(String name) {
         String env = Optional.ofNullable(System.getenv(name))
                 .orElseGet(() -> System.getProperty(name));
-        if (Strings.isEmpty(env)) {
+        if (env == null) {
             throw new IllegalStateException("Environment [" + name + "] not found");
         }
         return env;

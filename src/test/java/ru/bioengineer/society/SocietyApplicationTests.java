@@ -9,10 +9,10 @@ class SocietyApplicationTests {
 
     @BeforeAll
     static void beforeAll() {
-        System.setProperty("DB_JDBC_URL", "jdbc:postgresql://localhost:5440/db_main");
-        System.setProperty("DB_USERNAME", "postgres");
-        System.setProperty("DB_PASSWORD", "password");
-        System.setProperty("DB_PATH_TO_DRIVER_CLASS", "org.postgresql.Driver");
+        System.setProperty("DB_JDBC_URL", "jdbc:h2:mem:testdb");
+        System.setProperty("DB_USERNAME", "sa");
+        System.setProperty("DB_PASSWORD", "");
+        System.setProperty("DB_PATH_TO_DRIVER_CLASS", "org.h2.Driver");
     }
 
     @Test
