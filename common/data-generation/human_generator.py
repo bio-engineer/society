@@ -27,7 +27,7 @@ def random_birth_date(start_year=1900, end_year=2022):
     random_number_of_days = random.randrange(time_between_dates.days)
     random_date = start_date + timedelta(days=random_number_of_days)
 
-    return random_date.strftime('%d-%m-%Y')
+    return random_date.strftime('%Y-%m-%d')
 
 
 # Чтение имен, фамилий и отчеств
@@ -39,7 +39,7 @@ cities = read_csv('lookup/cities.csv')
 # Создание нового CSV файла
 with open('generated_mens.csv', 'w', newline='') as f:
     writer = csv.writer(f)
-    writer.writerow(['last_name', 'name', 'middle_name', 'birthdate', 'password'])
+    writer.writerow(['last_name', 'name', 'middle_name', 'birthdate', 'city', 'password'])
 
     # Генерация данных
     for _ in range(1000000):  # Генерируем 1000000 строк
