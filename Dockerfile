@@ -1,4 +1,4 @@
-FROM openjdk:20-slim
+FROM openjdk:21-slim
 
 ADD ./target/society.jar /app/
 
