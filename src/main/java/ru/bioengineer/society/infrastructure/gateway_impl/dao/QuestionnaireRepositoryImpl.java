@@ -83,10 +83,12 @@ public class QuestionnaireRepositoryImpl implements QuestionnaireRepository {
     @Override
     public Collection<Questionnaire> search(String firstName, String secondName) throws InternalException, TemporaryException {
         String insert = """
-                SELECT user_id, first_name, second_name, birthdate, biography, city FROM usr.questionnaire
+                SELECT user_id, first_name, second_name, birthdate, biography, city
+                FROM usr.questionnaire
                 WHERE (? IS NULL OR first_name like ?)
-                    AND (? IS NULL OR second_name like ?);
-                """;
+                  AND (? IS NULL OR second_name like ?)
+                ORDER BY user_id;
+                                """;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(insert);) {
             ps.setString(1, firstName);

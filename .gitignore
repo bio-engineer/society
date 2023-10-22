@@ -35,4 +35,4 @@ build/
 .vscode/
 
 .workspace/
-common/data-generation/generated_mens.csv
+common/data-generation/*.csv
