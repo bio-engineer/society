@@ -5,5 +5,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
     <include file="2023/09/09/main-structure.xml" relativeToChangelogFile="true"/>
+    <include file="2023/10/18/modify-tables.xml" relativeToChangelogFile="true"/>
+    <include file="2023/10/22/modify-tables.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

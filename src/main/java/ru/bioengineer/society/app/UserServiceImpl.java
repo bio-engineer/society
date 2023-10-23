@@ -1,5 +1,7 @@
 package ru.bioengineer.society.app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bioengineer.society.app.dto.QuestionnaireResponse;
@@ -21,6 +23,8 @@ import static io.micrometer.common.util.StringUtils.isEmpty;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final UserGateway userGateway;
     private final QuestionnaireGateway questionnaireGateway;
 
@@ -31,25 +35,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRegistrationResponse registration(UserRegistrationRequest registrationRequest)
+    public UserRegistrationResponse registration(UserRegistrationRequest request)
             throws InvalidDataException, InternalException, TemporaryException {
-        if (isEmpty(registrationRequest.password())) {
+        logger.info("User [firstName={} secondName={} birthdate={} city={}] try to register",
+                request.firstName(), request.secondName(), request.birthdate(), request.city()
+        );
+
+        if (isEmpty(request.password())) {
             throw new InvalidDataException("Password can't be empty");
         }
-        if (isEmpty(registrationRequest.firstName())) {
+        if (isEmpty(request.firstName())) {
             throw new InvalidDataException("First name can't be empty");
         }
 
-        String userId = userGateway.createNewUser(registrationRequest.password()).id();
+        String userId = userGateway.createNewUser(request.password()).id();
 
         questionnaireGateway.registration(
                 userId,
-                registrationRequest.firstName(),
-                registrationRequest.secondName(),
-                registrationRequest.birthdate(),
-                registrationRequest.biography(),
-                registrationRequest.city()
+                request.firstName(),
+                request.secondName(),
+                request.birthdate(),
+                request.biography(),
+                request.city()
         );
+
+        logger.info("User [{}] successful registered", userId);
 
         return new UserRegistrationResponse(userId);
     }

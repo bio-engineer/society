@@ -22,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public UserRegistrationResponse registration(@RequestBody UserRegistrationRequest registrationRequest) {
-        return userService.registration(registrationRequest);
+    public UserRegistrationResponse registration(@RequestBody UserRegistrationRequest request) {
+        return userService.registration(request);
     }
 
     @GetMapping(value = "/get/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})

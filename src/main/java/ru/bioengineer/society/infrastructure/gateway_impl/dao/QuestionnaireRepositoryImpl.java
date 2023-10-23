@@ -83,17 +83,19 @@ public class QuestionnaireRepositoryImpl implements QuestionnaireRepository {
     @Override
     public Collection<Questionnaire> search(String firstName, String secondName) throws InternalException, TemporaryException {
         String insert = """
-                SELECT user_id, first_name, second_name, birthdate, biography, city FROM usr.questionnaire
-                WHERE (? IS NULL OR first_name = ?)
-                    AND (? IS NULL OR second_name = ?);
-                """;
+                SELECT user_id, first_name, second_name, birthdate, biography, city
+                FROM usr.questionnaire
+                WHERE (? IS NULL OR first_name like ?)
+                  AND (? IS NULL OR second_name like ?)
+                ORDER BY user_id;
+                                """;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(insert);) {
             ps.setString(1, firstName);
-            ps.setString(2, firstName);
+            ps.setString(2, "%" + firstName + "%");
 
             ps.setString(3, secondName);
-            ps.setString(4, secondName);
+            ps.setString(4, "%" + secondName + "%");
 
             Collection<Questionnaire> result = new ArrayList<>();
             try (ResultSet rs = ps.executeQuery();) {
