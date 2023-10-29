@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.bioengineer.society.app.dto.QuestionnaireResponse;
 import ru.bioengineer.society.app.dto.UserRegistrationRequest;
 import ru.bioengineer.society.app.dto.UserRegistrationResponse;
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserRegistrationResponse registration(UserRegistrationRequest request)
             throws InvalidDataException, InternalException, TemporaryException {
         logger.info("User [firstName={} secondName={} birthdate={} city={}] try to register",
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public QuestionnaireResponse get(String userId)
             throws InvalidDataException, NotFoundException, InternalException, TemporaryException {
         if (isEmpty(userId)) {
@@ -76,6 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<QuestionnaireResponse> search(String firstName, String secondName)
             throws InvalidDataException, InternalException, TemporaryException {
         if (isEmpty(firstName) && isEmpty(secondName)) {

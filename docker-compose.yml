@@ -1,16 +1,47 @@
 version: '3.9'
 services:
-  postgresql_main:
+  db_master:
     image: postgres:latest
-    container_name: society_db
+    container_name: db_master
     ports:
-      - "5440:5432"
+      - "5430:5432"
     networks:
       - society-network
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=db_main
+      - POSTGRES_USER=master
+      - POSTGRES_PASSWORD=masterpass
+      - POSTGRES_DB=society_db
+    volumes:
+      - ./.workspace/docker_volumes/db_master/main_postgres_data:/var/lib/postgresql/data
+      - ./.workspace/docker_volumes/db_master/backup:/app
+  db_slave_1:
+    image: postgres:latest
+    container_name: db_slave_1
+    ports:
+      - "5451:5432"
+    networks:
+      - society-network
+    environment:
+      - POSTGRES_USER=master
+      - POSTGRES_PASSWORD=masterpass
+      - POSTGRES_DB=society_db
+    volumes:
+      - ./.workspace/docker_volumes/db_slave_1/main_postgres_data:/var/lib/postgresql/data
+      - ./.workspace/docker_volumes/db_slave_1/backup:/app
+  db_slave_2:
+    image: postgres:latest
+    container_name: db_slave_2
+    ports:
+      - "5461:5432"
+    networks:
+      - society-network
+    environment:
+      - POSTGRES_USER=master
+      - POSTGRES_PASSWORD=masterpass
+      - POSTGRES_DB=society_db
+    volumes:
+      - ./.workspace/docker_volumes/db_slave_2/main_postgres_data:/var/lib/postgresql/data
+      - ./.workspace/docker_volumes/db_slave_2/backup:/app
 
   society:
     container_name: society
@@ -20,14 +51,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_JDBC_URL=jdbc:postgresql://society_db:5432/db_main
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
+      - DB_MASTER_JDBC_URL=jdbc:postgresql://db_master:5432/society_db
+      - DB_SLAVE_JDBC_URL=jdbc:postgresql://db_slave_1:5432/society_db
+      - DB_USERNAME=master
+      - DB_PASSWORD=masterpass
       - DB_PATH_TO_DRIVER_CLASS=org.postgresql.Driver
     networks:
       - society-network
     depends_on:
-      - postgresql_main
+      - db_master
 
 networks:
   society-network:
