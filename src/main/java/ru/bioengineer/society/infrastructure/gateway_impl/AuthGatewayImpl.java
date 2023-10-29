@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.bioengineer.society.domain.exception.InternalException;
 import ru.bioengineer.society.domain.exception.InvalidDataException;
 import ru.bioengineer.society.domain.exception.NotFoundException;
@@ -35,6 +36,7 @@ public class AuthGatewayImpl implements AuthGateway {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String login(String userId, String password) throws InvalidDataException, NotFoundException, InternalException, TemporaryException {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id [" + userId + "] not found"));

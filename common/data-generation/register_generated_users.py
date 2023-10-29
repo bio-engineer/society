@@ -1,28 +1,36 @@
 import csv
 import requests
 
-# Словарь для преобразования имен полей
-fields_map = {
-    'last_name': 'secondName',
-    'name': 'firstName',
-    'middle_name': 'middleName',
-    'birthdate': 'birthdate',
-    'city': 'city',
-    'password': 'password'
-}
+_encoding = 'utf-8'
+
 
 # Открываем файл с данными о пользователях
-with open('generated_mens.csv', 'r') as file:
-    csv_reader = csv.DictReader(file)
-    data = list(csv_reader)
+with open('questionnaire.csv', 'r', encoding=_encoding) as f1, \
+        open('passwords.csv', 'r', encoding=_encoding) as f2:
+    questionnaire_reader = csv.DictReader(f1)
+    passwords_reader = csv.DictReader(f2)
 
-    # Преобразуем данные в JSON-объекты
-    json_data = [
-        {fields_map[key]: value for key, value in row.items()} for row in data
-    ]
+    questionnaire_data = list(questionnaire_reader)
+    passwords_data = list(passwords_reader)
+
+    quest_array = []
+    for i in range(len(questionnaire_data)):
+        questionnaire = questionnaire_data[i]
+        password = passwords_data[i]
+
+        quest_array.append(
+            {
+                "firstName": questionnaire['first_name'],
+                "secondName": questionnaire['second_name'],
+                "birthdate": questionnaire['birthdate'],
+                "city": questionnaire['city'],
+                "password": password['password']
+            }
+        )
+        print(f'Handle {i} questionnaire')
 
     # Отправляем POST-запросы на регистрацию пользователей
-    for item in json_data:
+    for item in quest_array:
 
         response = requests.post('http://localhost:8080/user/register', json=item)
 
